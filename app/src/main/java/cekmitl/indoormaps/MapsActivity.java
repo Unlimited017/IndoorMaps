@@ -1,10 +1,16 @@
 package cekmitl.indoormaps;
 
+import android.app.Dialog;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -12,35 +18,60 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    GoogleMap mGoogleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        if(googleServicesAvailable()){
+            Toast.makeText(this, "เข้าใช้งานสำเร็จ", Toast.LENGTH_LONG).show();
+            setContentView(R.layout.activity_maps);
+            //initMap();
+        } else {
+            // No google Maps Layout
+        }
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
     }
+    //Bug
+    /*private void initMap(){
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment);
+        mapFragment.getMapAsync(this);
+    } */
+    //Bug
+    //Check Status
 
+    public boolean googleServicesAvailable() {
+        GoogleApiAvailability api = GoogleApiAvailability.getInstance();
+        int isAvialable = api.isGooglePlayServicesAvailable(this);
+        if(isAvialable == ConnectionResult.SUCCESS){
+            return true;
+        } else if (api.isUserResolvableError(isAvialable)){
+            Dialog dialog = api.getErrorDialog(this, isAvialable, 0);
+            dialog.show();
+        } else {
+            Toast.makeText(this, "กรุณาเชื่อมต่ออินเทอร์เน็ต", Toast.LENGTH_LONG).show();
+        }
+        return false;
+    }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        mGoogleMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(13.746830, 100.535066);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        // Edit Start Map
+        goToLocationZoom(13.746830, 100.535066, 18);
+
+    }
+    private void goToLocation(double lat,double lng){
+        LatLng ll = new LatLng(lat,lng);
+        CameraUpdate update = CameraUpdateFactory.newLatLng(ll);
+        mGoogleMap.moveCamera(update);
+    }
+    private void goToLocationZoom(double lat,double lng, float zoom){
+        LatLng ll = new LatLng(lat,lng);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
+        mGoogleMap.moveCamera(update);
     }
 }
