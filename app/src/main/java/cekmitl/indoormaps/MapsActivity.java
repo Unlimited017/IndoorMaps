@@ -34,13 +34,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
     }
-    //Bug
-    /*private void initMap(){
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment);
-        mapFragment.getMapAsync(this);
-    } */
-    //Bug
-    //Check Status
 
     public boolean googleServicesAvailable() {
         GoogleApiAvailability api = GoogleApiAvailability.getInstance();
@@ -62,13 +55,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Edit Start Map
         goToLocationZoom(13.746830, 100.535066, 18);
+        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mGoogleMap.setIndoorEnabled(true);
+        mGoogleMap.getUiSettings().setIndoorLevelPickerEnabled(true);
+        mGoogleMap.getUiSettings().setTiltGesturesEnabled(true);
+        mGoogleMap.getUiSettings().setMapToolbarEnabled(true);
 
     }
-    private void goToLocation(double lat,double lng){
-        LatLng ll = new LatLng(lat,lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLng(ll);
-        mGoogleMap.moveCamera(update);
-    }
+
     private void goToLocationZoom(double lat,double lng, float zoom){
         LatLng ll = new LatLng(lat,lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
