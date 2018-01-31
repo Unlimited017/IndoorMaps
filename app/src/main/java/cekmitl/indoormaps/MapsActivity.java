@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
@@ -61,6 +63,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mGoogleMap.getUiSettings().setTiltGesturesEnabled(true);
         mGoogleMap.getUiSettings().setMapToolbarEnabled(true);
 
+        /*
+        ไว้ก่อน
+        mGoogleMap.addPolyline(new PolylineOptions().geodesic(true)
+                .add(new LatLng(13.746830, 100.535066))
+        ); */
     }
 
     private void goToLocationZoom(double lat,double lng, float zoom){
